@@ -58,7 +58,7 @@ def generate_analysis(name, reviews):
         {"role": "user", "content": f"Here are the reviews: {reviews}\n, please generate the specified summary"},
     ]
     )['choices'][0]['message']['content']
-    stripped = strip_response(SAMPLE_RES.split('\n---'))
+    stripped = strip_response(response.split('\n---'))
     return stripped
 
 
