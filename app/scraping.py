@@ -138,23 +138,23 @@ def reviews_from_urls(urls: list[str]):
     return outputs
 
 def save_product(outputs: list, name: str):
-    with open(f'{name}', 'wb') as file:
+    with open(f'app/saved/{name}.pkl', 'wb') as file:
         pickle.dump(outputs, file)
 
 
 def load_product(name: str):
     # Reading the list from the file
-    with open(f'{name}', 'rb') as file:
+    with open(f'app/saved/{name}.pkl', 'rb') as file:
         loaded_list = pickle.load(file)
     return loaded_list
 
 
 def save_url(output, name):
-    with open(f'{name}', 'wb') as file:
+    with open(f'app/saved/{name}.pkl', 'wb') as file:
         pickle.dump(output, file)
 
 def load_url(name):
-    with open(f'{name}', 'rb') as file:
+    with open(f'app/saved/{name}.pkl', 'rb') as file:
         output = pickle.load(file)
     return output
 
@@ -172,11 +172,11 @@ urls = [
     "https://www.amazon.ca/Running-Breathable-Comfortable-Sneakers-Athletic/dp/B098CWPL2B/ref=sr_1_22_sspa?crid=1GFM4LDBMUORW&keywords=running+shoes&qid=1697318976&sprefix=running+shoe%2Caps%2C102&sr=8-22-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9tdGY&psc=1"
 ]
 
-for product in products:
-    foundurls = product_lookup(product)
-    outputs = reviews_from_urls(foundurls)
-    save_product(outputs, product)
+# for product in products:
+#     foundurls = product_lookup(product)
+#     outputs = reviews_from_urls(foundurls)
+#     save_product(outputs, product)
 
-for i, url in enumerate(urls):
-    output = review_lookup(url)
-    save_url(url, str(i))
+# for i, url in enumerate(urls):
+#     output = review_lookup(url)
+#     save_url(url, str(i))
