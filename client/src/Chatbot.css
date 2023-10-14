@@ -36,5 +36,6 @@
     position: absolute;
 }
 
-
-
+.word-wrap {
+    word-wrap: break-word;
+}
