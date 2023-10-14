@@ -2,6 +2,7 @@ import os
 import openai
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
+MODEL = "gpt-3.5-turbo"
 
 TEST_REVIEWS = '''
 It is a true pleasure to use these awesome pans! I love to cook and will be using them on the regular I'm sure. I've only used the small one as I gave the big one to my Bro & his mate - they LOVE it!! I've never owned TFal before and went ahead and seasoned the pans although it appears there are 2 thoughts on that - some say if it is non-stick there's no need. Being old school, I would always season anyway, it certainly can't hurt and helps the pans to last longer. GREAT PRODUCT!
@@ -51,7 +52,7 @@ def generate_analysis(name, reviews):
 
     '''
     # response = openai.ChatCompletion.create(
-    # model="gpt-3.5-turbo",
+    # model=MODEL,
     # messages=[
     #     {"role": "system", "content": system_string},
     #     {"role": "user", "content": f"Here are the reviews: {reviews}\n, please generate the specified summary"},
@@ -60,6 +61,24 @@ def generate_analysis(name, reviews):
     # print(response)
     stripped = strip_response(SAMPLE_RES.split('\n---'))
     return stripped
+
+
+def product_question(names: list[str], reviews: list[str], prompt):
+    system_string = f"""Take in a list of products and reviews and use that information to answer a prompt"""
+    user_string = "Here are the products and corresponding reviews:\n"
+    for i in range(len(names)):
+        user_string += f"[Product name: {names[i]} \nReviews: \n{reviews[i]}]\n\n"
+
+    response = openai.ChatCompletion.create(
+    model=MODEL,
+    messages=[
+        {"role": "system", "content": system_string},
+        {"role": "user", "content": f"{user_string} Please answer the following question using the information provided: {prompt}. Use specific information from the reviews to justify the answer."},
+    ]
+    )['choices'][0]['message']['content']
+    print(response)
+    return response
+
 
 
 def strip_response(response):
@@ -86,5 +105,6 @@ def strip_response(response):
 
 print(generate_analysis('T-Fal Frying Pan Set', TEST_REVIEWS))
             
+
 
 
