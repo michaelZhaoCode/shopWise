@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 import threading
+import pickle
 
 REVIEW_AMOUNT = 10
 
@@ -38,21 +39,26 @@ def product_lookup(name: str):
         print("Found", len(results))
 
         for result in results[:10]:
-            header = result.find_element(By.CSS_SELECTOR,
-                                         'div[class="a-section a-spacing-small puis-padding-left-small '
-                                         'puis-padding-right-small"]')
             try:
-                # find the amount of ratings
-                rating_amount = result.find_element(By.CSS_SELECTOR, 'span[class="a-size-base s-underline-text"]').text
-                # if not sponsored and more than 99 ratings
-                if "Sponsored" not in header.text and len(rating_amount) > 2:
-                    link = result.find_element(By.CSS_SELECTOR,
-                                               "a[class='a-link-normal s-underline-text s-underline-link-text s-link-style "
-                                               "a-text-normal']")
-                    links.append(link.get_attribute('href'))
-            # rating doesn't exist
-            except NoSuchElementException:
-                pass
+                WebDriverWait(driver, 2).until(
+                    ec.presence_of_element_located((By.CSS_SELECTOR, 'div[class="a-section a-spacing-none a-spacing-top-small s-title-instructions-style"]'))
+                )
+                header = result.find_element(By.CSS_SELECTOR,
+                                             'div[class="a-section a-spacing-none a-spacing-top-small s-title-instructions-style"]')
+                try:
+                    # find the amount of ratings
+                    rating_amount = result.find_element(By.CSS_SELECTOR, 'span[class="a-size-base s-underline-text"]').text
+                    # if not sponsored and more than 99 ratings
+                    if "Sponsored" not in header.text and len(rating_amount) > 2:
+                        link = result.find_element(By.CSS_SELECTOR,
+                                                   "a[class='a-link-normal s-underline-text s-underline-link-text s-link-style "
+                                                   "a-text-normal']")
+                        links.append(link.get_attribute('href'))
+                # rating doesn't exist
+                except NoSuchElementException:
+                    pass
+            except TimeoutException:
+                print("e")
 
         return links[:3]
     except TimeoutException:
@@ -77,7 +83,8 @@ def review_lookup(url: str):
         sleep(1)
         rating = driver.find_element(By.CSS_SELECTOR, 'span[data-hook="rating-out-of-text"]').text
         # find positive reviews
-        driver.find_element(By.LINK_TEXT, "Positive reviews").click()
+        current_url = driver.current_url
+        driver.get(current_url.replace("all_stars", "positive"))
         sleep(1)
         reviews = driver.find_elements(By.CSS_SELECTOR, 'div[data-hook="review"]')
         for i, review in enumerate(reviews[:REVIEW_AMOUNT]):
@@ -85,7 +92,8 @@ def review_lookup(url: str):
             positive_reviews += f"Positive Review {i + 1}: \n" + review_text.text + "\n\n"
 
         # find negative reviews
-        driver.find_element(By.LINK_TEXT, "Critical reviews").click()
+        current_url = driver.current_url
+        driver.get(current_url.replace("positive", "critical"))
         sleep(1)
         reviews = driver.find_elements(By.CSS_SELECTOR, 'div[data-hook="review"]')
         for i, review in enumerate(reviews[:REVIEW_AMOUNT]):
@@ -129,7 +137,46 @@ def reviews_from_urls(urls: list[str]):
 
     return outputs
 
+def save_product(outputs: list, name: str):
+    with open(f'{name}', 'wb') as file:
+        pickle.dump(outputs, file)
 
-# urls = product_lookup("hot chocolate")
-# print(urls)
-# print(reviews_from_urls(urls))
+
+def load_product(name: str):
+    # Reading the list from the file
+    with open(f'{name}', 'rb') as file:
+        loaded_list = pickle.load(file)
+    return loaded_list
+
+
+def save_url(output, name):
+    with open(f'{name}', 'wb') as file:
+        pickle.dump(output, file)
+
+def load_url(name):
+    with open(f'{name}', 'rb') as file:
+        output = pickle.load(file)
+    return output
+
+
+products = [
+    "laptop",
+    "monitor",
+    "office table",
+    "projector",
+    "running shoes"
+]
+
+urls = [
+    'https://www.amazon.ca/GoodValue-Running-Waterproof-Non-Slip-All-Terrain/dp/B08ZHTSMVS/ref=sr_1_20?crid=1GFM4LDBMUORW&keywords=running+shoes&qid=1697318976&sprefix=running+shoe%2Caps%2C102&sr=8-20',
+    "https://www.amazon.ca/Running-Breathable-Comfortable-Sneakers-Athletic/dp/B098CWPL2B/ref=sr_1_22_sspa?crid=1GFM4LDBMUORW&keywords=running+shoes&qid=1697318976&sprefix=running+shoe%2Caps%2C102&sr=8-22-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9tdGY&psc=1"
+]
+
+for product in products:
+    foundurls = product_lookup(product)
+    outputs = reviews_from_urls(foundurls)
+    save_product(outputs, product)
+
+for i, url in enumerate(urls):
+    output = review_lookup(url)
+    save_url(url)
