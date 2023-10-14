@@ -3,8 +3,8 @@ from json import dumps
 from flask_cors import CORS, cross_origin
 
 
-from scraping import product_lookup, review_lookup
-from analysis import generate_analysis, product_question
+from app.scraping import product_lookup, review_lookup
+from app.analysis import generate_analysis, product_question
 
 
 app = Flask(__name__)
@@ -31,7 +31,7 @@ def analyze():
     analyses = []
     for url in urls:
         output = review_lookup(url)
-        REVIEWS.append(review)
+        REVIEWS.append(output)
 
         analysis = generate_analysis(output['name'], output['reviews'])
         analyses.append(analysis)
@@ -45,14 +45,17 @@ def add_urls():
     empty_reviews()
     urls = request.get_json()['urls']
     for url in urls:
-        review = review_lookup(url)
-        REVIEWS.append(review)
+        output = review_lookup(url)
+        REVIEWS.append(output)
+    return jsonify({
+        'response': 'Done'
+    })
 
 
 @app.route('/chat/', methods=['POST'])
 def chat():
     prompt = request.get_json()['prompt']
-    response = product_lookup(REVIEWS, prompt)
+    response = product_question(REVIEWS, prompt)
     return jsonify({
         'response': response
     })
