@@ -9,7 +9,7 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<Summary />} />
+          <Route path="/" element={<Chatbot />} />
           {/* <Route path="/dicomViewer/:dcmId" element={<DicomViewer />} /> */}
         </Routes>
       </Router>
