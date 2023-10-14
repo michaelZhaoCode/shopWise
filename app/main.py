@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, session
+from json import dumps
 from flask_cors import CORS, cross_origin
 from app.sql import *
 from app.analysis import reply, classify
@@ -22,30 +23,38 @@ REVIEWS = []
 
 @app.route('/analyze/', methods=['POST'])
 def analyze():
+    empty_reviews()
     product_name = request.get_json()['product']
     urls = get_urls(product_name)
     analyses = []
     for url in urls:
-        review, name = get_reviews(url)
-        REVIEWS.append([review, name])
-        analysis = generate_analysis(name, review)
+        output = get_reviews(url)
+        REVIEWS.append(review)
+
+        analysis = generate_analysis(output['name'], output['reviews'])
         analyses.append(analysis)
 
 
-    return jsonify({
-        'response': 'Done'
-    })
+    return dumps(analyses)
 
 @app.route('/addUrls/', methods=['POST'])
 def add_urls():
-    while REVIEWS:
-        REVIEWS.pop()
     
-
+    empty_reviews()
     urls = request.get_json()['urls']
     for url in urls:
-        reviews, name = get_reviews(url)
-        REVIEWS.append([review, name])
+        review = get_reviews(url)
+        REVIEWS.append(review)
 
 
+@app.route('/chat/', methods=['POST'])
+def chat():
+    prompt = request.get_json()['prompt']
+    response = get_response(REVIEWS, prompt)
+    return jsonify({
+        'response': response
+    })
 
+def empty_reviews():
+    while REVIEWS:
+        REVIEWS.pop()

@@ -63,7 +63,7 @@ def generate_analysis(name, reviews):
     return stripped
 
 
-def product_question(names: list[str], reviews: list[str], prompt):
+def product_question(reviews: list[str], prompt):
     system_string = f"""Take in a list of products and reviews and use that information to answer a prompt"""
     user_string = "Here are the products and corresponding reviews:\n"
     for i in range(len(names)):
