@@ -38,9 +38,12 @@ def review_lookup(url: str):
     negative_reviews = ""
 
     driver.get(url)
+    name = driver.find_element(By.ID, "productTitle").text
+    price = driver.find_element(By.CLASS_NAME, 'a-price').text
     review_button = driver.find_element(By.CSS_SELECTOR, 'a[data-hook="see-all-reviews-link-foot"]')
     review_button.click()
     sleep(1)
+    rating = driver.find_element(By.CSS_SELECTOR, 'span[data-hook="rating-out-of-text"]').text
     # find positive reviews
     driver.find_element(By.LINK_TEXT, "Positive reviews").click()
     sleep(1)
@@ -57,11 +60,18 @@ def review_lookup(url: str):
         review_text = review.find_element(By.CSS_SELECTOR, 'div[class="a-row a-spacing-small review-data"]')
         positive_reviews += f"Negative Review {i + 1}: \n" + review_text.text + "\n\n"
 
-    return positive_reviews, negative_reviews
+    final_reviews = positive_reviews + negative_reviews
+    output = {
+        "name": name,
+        "price": price,
+        "rating": rating,
+        "reviews": final_reviews
+    }
+
+    return output
 
 
 urls = product_lookup("hot chocolate")
 print(urls)
 reviews = review_lookup(urls[0])
-print(reviews[0])
-print(reviews[1])
+print(reviews)
