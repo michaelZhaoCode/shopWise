@@ -2,7 +2,8 @@ from selenium import webdriver
 from time import sleep
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-import threading
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
 
 REVIEW_AMOUNT = 10
 
@@ -50,55 +51,38 @@ def review_lookup(url: str):
     driver.get(url)
     name = driver.find_element(By.ID, "productTitle").text
     price = driver.find_element(By.CLASS_NAME, 'a-price').text
-    review_button = driver.find_element(By.CSS_SELECTOR, 'a[data-hook="see-all-reviews-link-foot"]')
-    review_button.click()
-    sleep(1)
-    rating = driver.find_element(By.CSS_SELECTOR, 'span[data-hook="rating-out-of-text"]').text
-    # find positive reviews
-    driver.find_element(By.LINK_TEXT, "Positive reviews").click()
-    sleep(1)
-    reviews = driver.find_elements(By.CSS_SELECTOR, 'div[data-hook="review"]')
-    for i, review in enumerate(reviews[:REVIEW_AMOUNT]):
-        review_text = review.find_element(By.CSS_SELECTOR, 'div[class="a-row a-spacing-small review-data"]')
-        positive_reviews += f"Positive Review {i + 1}: \n" + review_text.text + "\n\n"
+    try:
+        WebDriverWait(driver, 20).until(
+            ec.presence_of_element_located((By.LINK_TEXT, 'See more reviews'))
+        )
+        review_button = driver.find_element(By.LINK_TEXT, 'See more reviews')
+        review_button.click()
+        sleep(1)
+        rating = driver.find_element(By.CSS_SELECTOR, 'span[data-hook="rating-out-of-text"]').text
+        # find positive reviews
+        driver.find_element(By.LINK_TEXT, "Positive reviews").click()
+        sleep(1)
+        reviews = driver.find_elements(By.CSS_SELECTOR, 'div[data-hook="review"]')
+        for i, review in enumerate(reviews[:REVIEW_AMOUNT]):
+            review_text = review.find_element(By.CSS_SELECTOR, 'div[class="a-row a-spacing-small review-data"]')
+            positive_reviews += f"Positive Review {i + 1}: \n" + review_text.text + "\n\n"
 
-    # find negative reviews
-    driver.find_element(By.LINK_TEXT, "Critical reviews").click()
-    sleep(1)
-    reviews = driver.find_elements(By.CSS_SELECTOR, 'div[data-hook="review"]')
-    for i, review in enumerate(reviews[:REVIEW_AMOUNT]):
-        review_text = review.find_element(By.CSS_SELECTOR, 'div[class="a-row a-spacing-small review-data"]')
-        positive_reviews += f"Negative Review {i + 1}: \n" + review_text.text + "\n\n"
+        # find negative reviews
+        driver.find_element(By.LINK_TEXT, "Critical reviews").click()
+        sleep(1)
+        reviews = driver.find_elements(By.CSS_SELECTOR, 'div[data-hook="review"]')
+        for i, review in enumerate(reviews[:REVIEW_AMOUNT]):
+            review_text = review.find_element(By.CSS_SELECTOR, 'div[class="a-row a-spacing-small review-data"]')
+            positive_reviews += f"Negative Review {i + 1}: \n" + review_text.text + "\n\n"
 
-    final_reviews = positive_reviews + negative_reviews
-    output = {
-        "name": name,
-        "price": price,
-        "rating": rating,
-        "reviews": final_reviews
-    }
+        final_reviews = positive_reviews + negative_reviews
+        output = {
+            "name": name,
+            "price": price,
+            "rating": rating,
+            "reviews": final_reviews
+        }
 
-    return output
-
-
-def reviews_from_urls(urls: list[str]):
-    outputs = []
-    threads = []
-
-    for url in urls:
-        thread = threading.Thread(target=lambda x: outputs.append(review_lookup(url)))
-        threads.append(thread)
-
-    for thread in threads:
-        thread.start()
-
-    for thread in threads:
-        thread.join()
-
-    return outputs
-
-
-# urls = product_lookup("hot chocolate")
-# print(urls)
-# reviews = review_lookup(urls[0])
-# print(reviews)
+        return output
+    except:
+        raise Exception
