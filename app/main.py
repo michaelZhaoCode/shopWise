@@ -63,8 +63,8 @@ def add_urls():
     urls = request.get_json()['urls']
     if set(urls) == set(stored_urls):
         reviews = []
-        for url in set(stored_urls):
-            reviews.append(load_url(url))
+        for i in range(len(stored_urls)):
+            reviews.append(load_url(str(i)))
     else:
         reviews = reviews_from_urls(urls)
     for review in reviews:

@@ -179,4 +179,4 @@ for product in products:
 
 for i, url in enumerate(urls):
     output = review_lookup(url)
-    save_url(url, i)
+    save_url(url, str(i))
