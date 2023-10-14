@@ -3,7 +3,7 @@ from json import dumps
 from flask_cors import CORS, cross_origin
 
 
-from app.scraping import product_lookup, review_lookup
+from app.scraping import product_lookup, review_lookup, reviews_from_urls
 from app.analysis import generate_analysis, product_question
 
 
@@ -28,12 +28,13 @@ def analyze():
     empty_reviews()
     product_name = request.get_json()['product']
     urls = product_lookup(product_name)
+    reviews = reviews_from_urls(urls)
     analyses = []
-    for url in urls:
-        output = review_lookup(url)
-        REVIEWS.append(output)
+    for review in reviews:
+    
+        REVIEWS.append(review)
 
-        analysis = generate_analysis(output['name'], output['reviews'])
+        analysis = generate_analysis(review['name'], review['reviews'])
         analyses.append(analysis)
 
 
@@ -44,9 +45,10 @@ def add_urls():
     
     empty_reviews()
     urls = request.get_json()['urls']
-    for url in urls:
-        output = review_lookup(url)
-        REVIEWS.append(output)
+    reviews = reviews_from_urls(urls)
+    for review in reviews:
+        
+        REVIEWS.append(review)
     return jsonify({
         'response': 'Done'
     })
