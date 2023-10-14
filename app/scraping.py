@@ -2,16 +2,24 @@ from selenium import webdriver
 from time import sleep
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+import threading
 
 REVIEW_AMOUNT = 10
 
-options = Options()
-options.add_argument("--disable-extensions")
 
-driver = webdriver.Chrome(options=options)
+def initialize_driver():
+    options = Options()
+    options.add_argument("--disable-extensions")
+    options.add_argument("--headless")
+    driver = webdriver.Chrome(options=options)
+
+    return driver
 
 
 def product_lookup(name: str):
+
+    driver = initialize_driver()
+
     links = []
     url_name = name.replace(" ", "+")
 
@@ -34,6 +42,8 @@ def product_lookup(name: str):
 
 
 def review_lookup(url: str):
+    driver = initialize_driver()
+
     positive_reviews = ""
     negative_reviews = ""
 
@@ -69,6 +79,26 @@ def review_lookup(url: str):
     }
 
     return output
+
+
+
+
+def reviews_from_urls(urls: list[str]):
+    outputs = []
+    threads = []
+
+    for url in urls:
+        thread = threading.Thread(target=lambda x: outputs.append(review_lookup(url)))
+        threads.append(thread)
+
+    for thread in threads:
+        thread.start()
+
+    for thread in threads:
+        thread.join()
+
+    return outputs
+
 
 
 # urls = product_lookup("hot chocolate")
