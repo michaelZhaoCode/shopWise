@@ -51,14 +51,13 @@ def generate_analysis(name, reviews):
     • Con number 2, etc
 
     '''
-    # response = openai.ChatCompletion.create(
-    # model=MODEL,
-    # messages=[
-    #     {"role": "system", "content": system_string},
-    #     {"role": "user", "content": f"Here are the reviews: {reviews}\n, please generate the specified summary"},
-    # ]
-    # )['choices'][0]['message']['content']
-    # print(response)
+    response = openai.ChatCompletion.create(
+    model=MODEL,
+    messages=[
+        {"role": "system", "content": system_string},
+        {"role": "user", "content": f"Here are the reviews: {reviews}\n, please generate the specified summary"},
+    ]
+    )['choices'][0]['message']['content']
     stripped = strip_response(SAMPLE_RES.split('\n---'))
     return stripped
 
@@ -85,7 +84,7 @@ def product_question(outputs: list[dict], prompt):
         {"role": "user", "content": f"{user_string} Please answer the following question using the information provided: {prompt}. Use specific information from the reviews to justify the answer."},
     ]
     )['choices'][0]['message']['content']
-    print(response)
+
     return response
 
 
@@ -112,7 +111,7 @@ def strip_response(response):
 
 
 
-print(generate_analysis('T-Fal Frying Pan Set', TEST_REVIEWS))
+# print(generate_analysis('T-Fal Frying Pan Set', TEST_REVIEWS))
             
 
 

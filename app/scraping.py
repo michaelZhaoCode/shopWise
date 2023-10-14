@@ -71,7 +71,7 @@ def review_lookup(url: str):
     return output
 
 
-urls = product_lookup("hot chocolate")
-print(urls)
-reviews = review_lookup(urls[0])
-print(reviews)
+# urls = product_lookup("hot chocolate")
+# print(urls)
+# reviews = review_lookup(urls[0])
+# print(reviews)
