@@ -39,7 +39,7 @@ stored_urls = [
 @app.route('/analyze/', methods=['POST'])
 def analyze():
     empty_reviews()
-    product_name = request.get_json()['product']
+    product_name = request.get_json()['product'].lower()
     if product_name in stored_products:
         reviews = load_product(product_name)
     else:
