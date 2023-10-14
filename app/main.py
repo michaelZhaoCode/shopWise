@@ -11,6 +11,7 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 
+REVIEWS = []
 
 
 # reviews needa be stored
@@ -20,12 +21,31 @@ app.config["SESSION_TYPE"] = "filesystem"
 # take reviews and prompt - give response
 
 @app.route('/analyze/', methods=['POST'])
-def login():
+def analyze():
     product_name = request.get_json()['product']
-    # urls_and_names = get_urls(product_name)
-    # product_dict = {name: get_reviews(url) for url, name in urls_and_names}
+    urls = get_urls(product_name)
+    analyses = []
+    for url in urls:
+        review, name = get_reviews(url)
+        REVIEWS.append([review, name])
+        analysis = generate_analysis(name, review)
+        analyses.append(analysis)
 
 
     return jsonify({
         'response': 'Done'
     })
+
+@app.route('/addUrls/', methods=['POST'])
+def add_urls():
+    while REVIEWS:
+        REVIEWS.pop()
+    
+
+    urls = request.get_json()['urls']
+    for url in urls:
+        reviews, name = get_reviews(url)
+        REVIEWS.append([review, name])
+
+
+

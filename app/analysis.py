@@ -17,8 +17,7 @@ These are solid pans that heat up fast, but they are not truly non stick. You wi
 Hi, for those of you who are looking, these are Tfal's Signature series (which they don't tell you) and they are about 1.5" deep. Great price so I bought two sets. I was however looking for deeper pans like the pictures on this listing but every picture but the first are NOT of this product. The first picture doesn't tell much as there is no straight on side on views indicating how deep they may be. I am sure that they are good pans but Tfal needs to step up with accurate pictures and measurements as it is the only thing we have to go by. I wanted a 2" deep pan but only now I see that the pictures are not of what I bought. Sending both sets back hopefully on Tfals dime for misleading information.
 '''
 
-SAMPLE_RES = '''
-Summary:
+SAMPLE_RES = '''Summary:
 The T-Fal Frying Pan Set is highly recommended by customers. It is a pleasure to use, with non-stick capabilities and fast heating. The pans are solid and easy to clean. However, some customers found that they were not truly non-stick and required oil to be used. Additionally, there was some confusion with the product images and measurements, as they did not accurately depict the pans that were received.
 
 ---
@@ -59,11 +58,12 @@ def generate_analysis(name, reviews):
     # ]
     # )['choices'][0]['message']['content']
     # print(response)
-    stripped = strip_response(response.split('\n---'))
+    stripped = strip_response(SAMPLE_RES.split('\n---'))
     return stripped
 
 
 def strip_response(response):
+
     keywords = ['summary', 'pros', 'cons']
     for i in range(len(keywords)):
         assert keywords[i] in response[i].lower()
@@ -72,8 +72,11 @@ def strip_response(response):
     summary_res = response[0]
     summary = summary_res[summary_res.index('\n') + 1:]
 
-    pros, cons = response[1].split('\n')[1:], response[2].split('\n')[1:]
+    pros, cons = response[1].split('\n')[2:], response[2].split('\n')[2:]
 
+    for lst in [pros, cons]:
+        for i in range(len(lst)):
+            lst[i] = lst[i][2:]
     response_dict['summary'] = summary
     response_dict['pros'] = pros
     response_dict['cons'] = cons
@@ -81,7 +84,7 @@ def strip_response(response):
 
 
 
-generate_analysis('T-Fal Frying Pan Set', TEST_REVIEWS)
+print(generate_analysis('T-Fal Frying Pan Set', TEST_REVIEWS))
             
 
 
