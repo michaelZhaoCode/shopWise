@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, session
+from json import dumps
 from flask_cors import CORS, cross_origin
 from app.sql import *
 from app.analysis import reply, classify
@@ -11,6 +12,7 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 
+REVIEWS = []
 
 
 # reviews needa be stored
@@ -20,12 +22,39 @@ app.config["SESSION_TYPE"] = "filesystem"
 # take reviews and prompt - give response
 
 @app.route('/analyze/', methods=['POST'])
-def login():
+def analyze():
+    empty_reviews()
     product_name = request.get_json()['product']
-    # urls_and_names = get_urls(product_name)
-    # product_dict = {name: get_reviews(url) for url, name in urls_and_names}
+    urls = get_urls(product_name)
+    analyses = []
+    for url in urls:
+        output = get_reviews(url)
+        REVIEWS.append(review)
+
+        analysis = generate_analysis(output['name'], output['reviews'])
+        analyses.append(analysis)
 
 
+    return dumps(analyses)
+
+@app.route('/addUrls/', methods=['POST'])
+def add_urls():
+    
+    empty_reviews()
+    urls = request.get_json()['urls']
+    for url in urls:
+        review = get_reviews(url)
+        REVIEWS.append(review)
+
+
+@app.route('/chat/', methods=['POST'])
+def chat():
+    prompt = request.get_json()['prompt']
+    response = get_response(REVIEWS, prompt)
     return jsonify({
-        'response': 'Done'
+        'response': response
     })
+
+def empty_reviews():
+    while REVIEWS:
+        REVIEWS.pop()
