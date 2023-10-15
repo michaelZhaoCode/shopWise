@@ -82,7 +82,7 @@ def chat():
     prompt = request.get_json()['prompt']
     if prompt == 'sexy':
         return jsonify({
-        'response': sexy
+        'response': 'sexy'
     })
     response = product_question(REVIEWS, prompt)
     return jsonify({
