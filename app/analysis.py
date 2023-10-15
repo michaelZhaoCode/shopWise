@@ -164,13 +164,13 @@ def load_response(name: str):
     return loaded_list
 
 
-# stored_products = [
-#     "laptop",
-#     "monitor",
-#     "office table",
-#     "projector",
-#     "running shoes"
-# ]
+stored_products = [
+    "laptop",
+    "monitor",
+    "office table",
+    "projector",
+    "running shoes"
+]
 
 # for product in stored_products:
 #     reviews = load_product(product)

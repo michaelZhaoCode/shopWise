@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 import threading
 import pickle
+from sentiment import classify 
 
 REVIEW_AMOUNT = 7
 
@@ -93,10 +94,12 @@ def review_lookup(url: str):
 
         # find negative reviews
         current_url = driver.current_url
+        
         driver.get(current_url.replace("positive", "critical"))
         sleep(1)
         reviews = driver.find_elements(By.CSS_SELECTOR, 'div[data-hook="review"]')
         for i, review in enumerate(reviews[:REVIEW_AMOUNT]):
+            # classified = classify(review)
             review_text = review.find_element(By.CSS_SELECTOR, 'div[class="a-row a-spacing-small review-data"]')
             positive_reviews += f"Negative Review {i + 1}: \n" + review_text.text + "\n\n"
 
@@ -180,3 +183,4 @@ urls = [
 # for i, url in enumerate(urls):
 #     output = review_lookup(url)
 #     save_url(url, str(i))
+print(load_product('running shoes'))
