@@ -43,9 +43,14 @@ def analyze():
     product_name = request.get_json()['product'].lower()
 
     if product_name in stored_products:
-        # reviews = load_product(product_name)
+        reviews = load_product(product_name)
         sleep(2)
         analyses = load_response(product_name)
+
+        for i, analysis in analyses:
+            analysis["name"] = reviews[i]["name"]
+            analysis["price"] = reviews[i]["price"]
+            analysis["rating"] = reviews[i]["rating"]
     else:
         urls = product_lookup(product_name)
         reviews = reviews_from_urls(urls)
@@ -55,6 +60,9 @@ def analyze():
             REVIEWS.append(review)
 
             analysis = generate_analysis(review['name'], review['reviews'])
+            analysis["name"] = review["name"]
+            analysis["price"] = review["price"]
+            analysis["rating"] = review["rating"]
             analyses.append(analysis)
 
 
