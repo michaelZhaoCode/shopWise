@@ -18,7 +18,7 @@ const Chatbot = () => {
     "response4",
     "response5",
   ]);
-  const [userInput, setUserInput] = useState('');
+  const [prompt, setPrompt] = useState('');
 
   const [chatMessages, setChatMessages] = useState([]);
 
@@ -52,14 +52,15 @@ const Chatbot = () => {
   }, [responses, userInputs]);
 
   const callAPI = () => {
-    console.log(userInput);
-    setUserInputs((prevInputs) => [...prevInputs, userInput]);
+    console.log(prompt);
+    setUserInputs((prevInputs) => [...prevInputs, prompt]);
+    console.log(JSON.stringify({ prompt }));
     fetch('http://localhost:5000/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ userInput }),
+      body: JSON.stringify({ prompt }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -105,7 +106,7 @@ const Chatbot = () => {
               className="footer-color text-white p-3 rounded-3xl text-sm w-10/12"
               placeholder="Enter a message"
               onChange={(e) => {
-                setUserInput(e.target.value);
+                setPrompt(e.target.value);
               }}
             />
             <div className="flex justify-center items-center w-1/12">
