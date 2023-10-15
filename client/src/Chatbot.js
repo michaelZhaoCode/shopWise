@@ -18,7 +18,7 @@ const Chatbot = () => {
     "response4",
     "response5",
   ]);
-  const [prompt, setPrompt] = useState('');
+  const [prompt, setPrompt] = useState("");
 
   const [chatMessages, setChatMessages] = useState([]);
 
@@ -55,29 +55,34 @@ const Chatbot = () => {
     console.log(prompt);
     setUserInputs((prevInputs) => [...prevInputs, prompt]);
     console.log(JSON.stringify({ prompt }));
-    fetch('http://localhost:5000/chat', {
-      method: 'POST',
+    const body = { prompt: prompt };
+
+    const response = fetch("http://127.0.0.1:5000/chat", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
       },
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify(body),
     })
-      .then((response) => response.json())
       .then((data) => {
-        const { response } = data;
-        // Add the response to the state array
-        setResponses((prevResponses) => [...prevResponses, response])
-    })
+        let resp = "";
+        response.json().then((data) => {
+          console.log(data);
+          resp = data.response;
+        });
+        setResponses((prevResponses) => [...prevResponses, resp]);
+      })
       .catch((error) => {
-        console.error('API request error:', error);
+        console.error("API request error:", error);
       });
-    // responses.push('API CALL EXAMPLE');
-    // setResponses((prevResponses) => [...prevResponses, prompt])
   };
 
   useEffect(() => {
     console.log(userInputs);
-  }, [userInputs])
+  }, [userInputs]);
 
   return (
     <div className="h-screen bg-black p-16 pt-25">
@@ -110,9 +115,13 @@ const Chatbot = () => {
               }}
             />
             <div className="flex justify-center items-center w-1/12">
-              <img src={sendButton} alt="Send Button" onClick={() => {
-                callAPI()
-              }} />
+              <img
+                src={sendButton}
+                alt="Send Button"
+                onClick={() => {
+                  callAPI();
+                }}
+              />
             </div>
           </div>
         </div>
