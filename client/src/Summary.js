@@ -4,6 +4,8 @@ import "./Summary.css";
 import leftArrow from "./assets/left_arrow_icon.svg";
 
 const Summary = () => {
+    
+
   return (
     <div className="bg-black h-screen overflow-auto">
       <div className="flex justify-start h-1/10 mt-10 ml-10 gap-5">

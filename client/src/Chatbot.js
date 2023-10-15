@@ -49,10 +49,11 @@ const Chatbot = () => {
     }
 
     setChatMessages(newMessages);
-  }, [responses]);
+  }, [responses, userInputs]);
 
   const callAPI = () => {
     console.log(userInput);
+    setUserInputs((prevInputs) => [...prevInputs, userInput]);
     fetch('http://localhost:5000/chat', {
       method: 'POST',
       headers: {
@@ -72,6 +73,10 @@ const Chatbot = () => {
     // responses.push('API CALL EXAMPLE');
     // setResponses((prevResponses) => [...prevResponses, prompt])
   };
+
+  useEffect(() => {
+    console.log(userInputs);
+  }, [userInputs])
 
   return (
     <div className="h-screen bg-black p-16 pt-25">
