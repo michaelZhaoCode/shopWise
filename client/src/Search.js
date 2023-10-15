@@ -4,6 +4,7 @@ import Lottie from "lottie-react";
 import cartAnimation from "./assets/cart-animation.json";
 import { useAppContext } from "./Context";
 import { useNavigate } from "react-router-dom";
+import "./Search.css"
 
 const Search = () => {
   const { searchPrompt, setSearchPrompt, productInfo, setProductInfo } =
@@ -40,15 +41,15 @@ const Search = () => {
   };
   return (
     <div className="text-white h-screen flex items-center justify-center bg-zinc-900 p-12">
-      <div className="h-full w-full items-center justify-center bg-[#D5A13D] rounded-3xl flex flex-col">
+      <div className="h-full w-full items-center justify-center bg-[#D5A13D] rounded-3xl flex flex-col" id="search-box">
         <div className="w-[250px] h-[250px]">
           <Lottie
             animationData={cartAnimation}
             className="w-fit h-fit -translate-y-48"
           />
         </div>
-        <h1 className="text-7xl font-semibold">ShopWise</h1>
-        <h2 className="whitespace-normal max-w-lg mt-12 text-lg">
+        <h1 className="text-7xl font-semibold drop-shadow-xl" id="search-title">ShopWise</h1>
+        <h2 className="whitespace-normal max-w-lg mt-12 text-lg" id="search-desc">
           Start your search by querying a product name below
         </h2>
 

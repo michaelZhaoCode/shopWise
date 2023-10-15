@@ -15,8 +15,8 @@ const Home = () => {
   return (
     <div className="h-screen flex items-center justify-center flex-row bg-zinc-900">
       <div className="text-white">
-        <h1 className="text-8xl font-semibold">ShopWise</h1>
-        <h2 className="whitespace-normal max-w-lg mt-12 text-lg mb-8">
+        <h1 className="text-8xl font-semibold drop-shadow-sm mb-4 pb-8" id="home-title">ShopWise</h1>
+        <h2 className="whitespace-normal max-w-lg text-lg mb-8" id="home-desc">
           Powered by ChatGPT, ShopWise streamlines your online shopping
           experience by distilling valuable insights and visual comparisons,
           empowering you to make better informed decisions for all your needs.
@@ -31,7 +31,7 @@ const Home = () => {
         </ul>
 
       </div>
-      <div className="h-screen"><CartCanvas /></div>
+      <div className="h-screen cart-canvas"><CartCanvas /></div>
     </div>
   );
 }

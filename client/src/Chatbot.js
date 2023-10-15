@@ -5,6 +5,7 @@ import urlButton from "./assets/urlsubmit.png";
 import Lottie from "lottie-react"
 import robotAnimation from "./assets/robotAnimation.json"
 import ScrollToBottom from "react-scroll-to-bottom";
+import "./Search.css"
 
 const Chatbot = () => {
   const [userInputs, setUserInputs] = useState([]);
@@ -127,7 +128,7 @@ const Chatbot = () => {
                       </div>
                     </div>
                   )}
-      <div className="flex flex-col rounded-3xl h-full">
+      <div className="flex flex-col rounded-3xl h-full" id="chat-box">
         
         {/* Header */}
         <div className="font-bold text-2xl flex justify-center h-1/6 items-center text-white shadow-lg rounded-t-3xl header-color">
