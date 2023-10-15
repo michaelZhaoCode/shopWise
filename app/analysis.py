@@ -58,8 +58,8 @@ def generate_analysis(name, reviews):
         {"role": "user", "content": f"Here are the reviews: {reviews}\n, please generate the specified summary"},
     ]
     )['choices'][0]['message']['content']
-    print(response)
-    stripped = strip_response(response.split('\n---'))
+    extracted = extract_to_list(response)
+    stripped = strip_response(extracted)
     return stripped
 
 
@@ -85,13 +85,20 @@ def product_question(outputs: list[dict], prompt):
         {"role": "user", "content": f"{user_string} Please answer the following question using the information provided: {prompt}. Use specific information from the reviews to justify the answer."},
     ]
     )['choices'][0]['message']['content']
-
+    
     return response
 
-
+def extract_to_list(response):
+    keywords = ['summary', 'pros', 'cons']
+    lengths = [len(i) for i in keywords]
+    idxs = [response.lower().index(i) for i in keywords]
+    first = response[idxs[0]:idxs[1]]
+    second = response[idxs[1]:idxs[2]]
+    third = response[idxs[2]:]
+    return [first, second, third]
 
 def strip_response(response):
-    print(response, '\n\n\n\n')
+   
     keywords = ['summary', 'pros', 'cons']
     for i in range(len(keywords)):
         assert keywords[i] in response[i].lower()
