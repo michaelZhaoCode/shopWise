@@ -80,9 +80,11 @@ def add_urls():
 @app.route('/chat/', methods=['POST'])
 @cross_origin
 def chat():
-
+    print(1)
+    
     prompt = request.get_json()['prompt']
     if prompt == 'sexy':
+        print(1)
         return jsonify({
         'response': 'sexy'
     })
