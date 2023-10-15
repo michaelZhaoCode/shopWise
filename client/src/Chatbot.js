@@ -18,6 +18,7 @@ const Chatbot = () => {
     "response4",
     "response5",
   ]);
+  const [userInput, setUserInput] = useState('');
 
   const [chatMessages, setChatMessages] = useState([]);
 
@@ -51,19 +52,19 @@ const Chatbot = () => {
   }, [responses]);
 
   const callAPI = () => {
-    console.log(userInputs);
+    console.log(userInput);
     fetch('http://localhost:5000/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify({ userInput }),
     })
       .then((response) => response.json())
       .then((data) => {
         const { response } = data;
         // Add the response to the state array
-        setResponses((prevResponses) => [...prevResponses, prompt])
+        setResponses((prevResponses) => [...prevResponses, response])
     })
       .catch((error) => {
         console.error('API request error:', error);
@@ -99,7 +100,7 @@ const Chatbot = () => {
               className="footer-color text-white p-3 rounded-3xl text-sm w-10/12"
               placeholder="Enter a message"
               onChange={(e) => {
-                setUserInputs(e.target.value);
+                setUserInput(e.target.value);
               }}
             />
             <div className="flex justify-center items-center w-1/12">
