@@ -13,7 +13,7 @@ function App() {
       <AppProvider>
         <Router>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Chatbot />} />
             <Route path="/search" element={<Search />} />
 
             <Route path="/chat" element={<Chatbot />} />

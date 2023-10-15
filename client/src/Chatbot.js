@@ -90,16 +90,16 @@ const Chatbot = () => {
     <div className="h-screen bg-black p-16 pt-25">
       <div className="flex flex-col rounded-3xl main-height">
         {/* Header */}
-        <div className="font-bold text-2xl flex justify-center h-1/6 items-center text-white shadow-lg rounded-3xl header-color">
+        <div className="font-bold text-2xl flex justify-center h-1/6 items-center text-white shadow-lg rounded-t-3xl header-color">
           <h1>AI CHAT</h1>
         </div>
 
         {/* BODY */}
-        <ScrollToBottom className="flex flex-col justify-center h-4/6 items-center overflow-auto m-3">
+        <ScrollToBottom className="flex flex-col justify-center h-4/6 items-center overflow-auto mt-3">
           {/* Display chat messages dynamically */}
           {chatMessages.map((message, index) => (
             <div
-              className="text-white flex flex-col justify-center items-center h-auto w-full"
+              className="text-white bg-[#202020] flex flex-col justify-center items-center h-auto w-full"
               key={index}
             >
               {message}
@@ -107,17 +107,18 @@ const Chatbot = () => {
           ))}
         </ScrollToBottom>
 
-        <div className="flex justify-center h-1/6 items-center">
+        <div className="bg-[#202020] rounded-b-3xl mt-3 flex justify-center h-1/6 items-center">
           <div className="flex w-full gap-5 ml-5 mr-5 justify-center">
             <input
               className="footer-color text-white p-3 rounded-3xl text-sm w-10/12"
-              placeholder="Enter a message"
+              placeholder="  Enter a message"
               onChange={(e) => {
                 setPrompt(e.target.value);
               }}
             />
             <div className="flex justify-center items-center w-1/12">
               <img
+                className="hover:scale-125 duration-500 cursor-pointer"
                 src={sendButton}
                 alt="Send Button"
                 onClick={() => {
