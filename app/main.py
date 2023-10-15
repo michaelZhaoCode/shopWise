@@ -50,7 +50,10 @@ def analyze():
         analyses = load_response(product_name)
 
         for i, analysis in enumerate(analyses):
-            analysis["name"] = reviews[i]["name"]
+            if len(reviews[i]["name"]) > 20:
+                analysis["name"] = reviews[i]["name"][:19] + "..."
+            else:
+                analysis["name"] = reviews[i]["name"]
             analysis["price"] = reviews[i]["price"]
             analysis["rating"] = reviews[i]["rating"]
             analysis['image'] = reviews[i]['image']
