@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify, session
 from json import dumps
 from flask_cors import CORS, cross_origin
+from time import sleep
 
 
 from app.scraping import product_lookup, review_lookup, reviews_from_urls, load_url, load_product
-from app.analysis import generate_analysis, product_question
+from app.analysis import generate_analysis, product_question, load_response
 
 
 app = Flask(__name__)
@@ -42,17 +43,19 @@ def analyze():
     product_name = request.get_json()['product'].lower()
 
     if product_name in stored_products:
-        reviews = load_product(product_name)
+        # reviews = load_product(product_name)
+        sleep(2)
+        analyses = load_response(product_name)
     else:
         urls = product_lookup(product_name)
         reviews = reviews_from_urls(urls)
-    analyses = []
-    for review in reviews:
+        analyses = []
+        for review in reviews:
 
-        REVIEWS.append(review)
+            REVIEWS.append(review)
 
-        analysis = generate_analysis(review['name'], review['reviews'])
-        analyses.append(analysis)
+            analysis = generate_analysis(review['name'], review['reviews'])
+            analyses.append(analysis)
 
 
     return dumps(analyses)
@@ -81,7 +84,7 @@ def add_urls():
 @cross_origin()
 def chat():
     print(1)
-    
+
     prompt = request.get_json()['prompt']
     if prompt == 'sexy':
         print(1)

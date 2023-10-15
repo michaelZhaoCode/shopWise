@@ -1,5 +1,7 @@
 import os
 import openai
+from scraping import load_product
+import pickle
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
 MODEL = "gpt-3.5-turbo"
@@ -59,7 +61,7 @@ def generate_analysis(name, reviews):
     ]
     )['choices'][0]['message']['content']
     extracted = extract_to_list(response)
-    print(extracted, '*****\n')
+    # print(extracted, '*****\n')
     stripped = strip_response(extracted)
     return stripped
 
@@ -86,36 +88,39 @@ def product_question(outputs: list[dict], prompt):
         {"role": "user", "content": f"{user_string} Please answer the following question using the information provided: {prompt}. Use specific information from the reviews to justify the answer."},
     ]
     )['choices'][0]['message']['content']
-    
+
     return response
 
 def extract_to_list(response):
     keywords = ['summary:', 'pros:', 'cons:']
     lengths = [len(i) for i in keywords]
     idxs = [response.lower().index(i) for i in keywords]
-    print(idxs)
+    # print(idxs)
     first = response[idxs[0]:idxs[1]]
     second = response[idxs[1]:idxs[2]]
     third = response[idxs[2]:]
     res = [first, second, third]
 
     for i in range(len(keywords)):
-        try:
-            assert keywords[i] in res[i].lower()
-        except:
-            print(response, res, 'bad', sep='\n!!!!\n')
+        # try:
+        assert keywords[i] in res[i].lower()
+        # except:
+        #     pass
+            # print(response, res, 'bad', sep='\n!!!!\n')
     return res
 
 def strip_response(response):
-   
-    
+
+
 
     response_dict = {}
     summary_res = response[0]
     summary = summary_res[summary_res.index('\n') + 1:].replace('\n\n---\n', '')
 
-    pros, cons = response[1].replace('\n\n---\n', '').split('\n')[2:], response[2].replace('\n\n---\n', '').split('\n')[2:]
-    print(pros, cons)
+    pros, cons = response[1].replace('\n\n---\n', '').replace("\n\n", "").split('\n')[2:], response[2].replace('\n\n---\n', '').replace("\n\n", "").split('\n')[2:]
+    # print(pros, cons)
+    # print(response[1])
+    # print(response[2])
     for lst in [pros, cons]:
         for i in range(len(lst)):
             lst[i] = lst[i][2:]
@@ -127,7 +132,51 @@ def strip_response(response):
 
 
 # print(generate_analysis('T-Fal Frying Pan Set', TEST_REVIEWS))
-            
 
 
+def save_response(name, reviews):
+    analyses = []
+    for review in reviews:
+        analysis = generate_analysis(review["name"], review["reviews"])
+        clean_response(analysis["pros"])
+        clean_response(analysis["cons"])
 
+        analyses.append(analysis)
+        print(analysis)
+    with open(f'app/analyses/{name}.pkl', 'wb') as file:
+        pickle.dump(analyses, file)
+
+
+def clean_response(response: list):
+    if "-" in response:
+        response.remove("-")
+        clean_response(response)
+
+    if "" in response:
+        response.remove("")
+        clean_response(response)
+
+
+def load_response(name: str):
+    # Reading the list from the file
+    with open(f'app/analyses/{name}.pkl', 'rb') as file:
+        loaded_list = pickle.load(file)
+    return loaded_list
+
+
+# stored_products = [
+#     "laptop",
+#     "monitor",
+#     "office table",
+#     "projector",
+#     "running shoes"
+# ]
+
+# for product in stored_products:
+#     reviews = load_product(product)
+#     save_response(product, reviews)
+
+# for product in stored_products:
+#     analyses = load_response(product)
+#     for analysis in analyses:
+#         print(analysis)
