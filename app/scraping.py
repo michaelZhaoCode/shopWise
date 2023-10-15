@@ -7,7 +7,7 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 import threading
 import pickle
-# from sentiment import classify 
+# from sentiment import classify
 
 REVIEW_AMOUNT = 7
 
@@ -74,7 +74,8 @@ def review_lookup(url: str):
 
     driver.get(url)
     name = driver.find_element(By.ID, "productTitle").text
-    price = driver.find_element(By.CLASS_NAME, 'a-price').text
+    price = driver.find_element(By.CLASS_NAME, 'a-price').text.replace("\n", ".")
+    image = driver.find_element(By.ID, "landingImage").get_attribute('src')
     try:
         WebDriverWait(driver, 2).until(
             ec.presence_of_element_located((By.LINK_TEXT, 'See more reviews'))
@@ -94,7 +95,7 @@ def review_lookup(url: str):
 
         # find negative reviews
         current_url = driver.current_url
-        
+
         driver.get(current_url.replace("positive", "critical"))
         sleep(1)
         reviews = driver.find_elements(By.CSS_SELECTOR, 'div[data-hook="review"]')
@@ -108,7 +109,8 @@ def review_lookup(url: str):
             "name": name,
             "price": price,
             "rating": rating,
-            "reviews": final_reviews
+            "reviews": final_reviews,
+            "image": image
         }
 
         return output
@@ -178,9 +180,10 @@ urls = [
 # for product in products:
 #     foundurls = product_lookup(product)
 #     outputs = reviews_from_urls(foundurls)
+#     print(outputs)
 #     save_product(outputs, product)
-#
+# #
 # for i, url in enumerate(urls):
 #     output = review_lookup(url)
 #     save_url(url, str(i))
-print(load_product('running shoes'))
+# print(load_product('running shoes'))
