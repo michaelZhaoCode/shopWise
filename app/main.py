@@ -44,6 +44,8 @@ def analyze():
 
     if product_name in stored_products:
         reviews = load_product(product_name)
+        for review in reviews:
+            REVIEWS.append(review)
         sleep(2)
         analyses = load_response(product_name)
 
@@ -51,6 +53,7 @@ def analyze():
             analysis["name"] = reviews[i]["name"]
             analysis["price"] = reviews[i]["price"]
             analysis["rating"] = reviews[i]["rating"]
+            analysis['image'] = reviews[i]['image']
     else:
         urls = product_lookup(product_name)
         reviews = reviews_from_urls(urls)
@@ -63,6 +66,7 @@ def analyze():
             analysis["name"] = review["name"]
             analysis["price"] = review["price"]
             analysis["rating"] = review["rating"]
+            analysis['image'] = review['image']
             analyses.append(analysis)
 
 

@@ -57,7 +57,7 @@ def generate_analysis(name, reviews):
     model=MODEL,
     messages=[
         {"role": "system", "content": system_string},
-        {"role": "user", "content": f"Here are the reviews: {reviews}\n, please generate the specified summary"},
+        {"role": "user", "content": f"Here are the reviews: {reviews}\n, please generate the specified summary in less than 30 words and generate 3 pros and 3 cons"},
     ]
     )['choices'][0]['message']['content']
     extracted = extract_to_list(response)
