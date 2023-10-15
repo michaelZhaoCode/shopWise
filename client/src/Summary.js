@@ -4,6 +4,11 @@ import "./Summary.css";
 import leftArrow from "./assets/left_arrow_icon.svg";
 import { useAppContext } from "./Context";
 import { useNavigate } from "react-router-dom";
+import Loading from "./Loading";
+import shoes1 from './assets/shoes1.png'
+import shoes2 from './assets/shoes2.png'
+import shoes3 from './assets/shoes3.png'
+import chatIcon from './assets/chatIcon.png'
 
 const Summary = () => {
   const { productInfo, setProductInfo } = useAppContext();
@@ -25,42 +30,55 @@ const Summary = () => {
 
     <div className="bg-black h-screen overflow-auto">
         {productInfo.length === 0 ? (
-            <div className="text-white">
-                haha
-            </div>
+            <Loading />
     ) : (
         <>
-      <div className="flex justify-start h-1/10 mt-10 ml-10 gap-5">
-        <div className="flex justify-center items-center">
+      <div className="flex justify-center h-1/10 mt-7 ml-20 mr-20 gap-5">
+        <div className="w-1/2 flex justify-start">
+          <div className="flex justify-center items-center ">
+            <img
+              onClick={() => {
+                navigate("/search");
+              }}
+              src={leftArrow}
+              className="w-10 h-10  "
+              alt="Left Arrow"
+            />
+            <button
+              className=" text-white text-4xl ml-5"
+              onClick={() => {
+                console.log("test");
+                navigate("/search");
+              }}
+            >
+              Back
+            </button>
+          </div>
+          </div>
+          <div className="w-1/2 flex justify-end">
+        <div className=" flex justify-center items-center ">
           <img
             onClick={() => {
-              navigate("/search");
+              navigate("/chat");
             }}
-            src={leftArrow}
-            className="w-10 h-10  "
+            src={chatIcon}
+            className="w-16 h-14"
             alt="Left Arrow"
           />
+
         </div>
-        <div className="flex justify-center items-center">
-          <button
-            className=" text-white text-4xl"
-            onClick={() => {
-              console.log("test");
-              navigate("/search");
-            }}
-          >
-            Back
-          </button>
         </div>
+        
       </div>
-      <div className="flex flex-row p-10 gap-5 h-9/10">
+
+      <div className="flex flex-row p-10 gap-5 h-[95%]">
         <div className="w-1/3 flex flex-col p-5 rounded-3xl overflow-auto cell-color">
           <div className="flex ">
             <div className="flex w-1/3 p-2">
-              <img src={productIcon} className=""></img>
+              <img src={shoes1} className=""></img>
             </div>
-            <div className="flex w-2/3">
-              <h1 className="text-white">{productInfo[0].name}</h1>
+            <div className="flex w-2/3 justify-center items-center">
+              <h1 className="text-white text-md font-bold">{productInfo[0].name}</h1>
             </div>
           </div>
           <div className="flex align-middle justify-center p-2">
@@ -68,7 +86,7 @@ const Summary = () => {
               <h1 className="text-white">{productInfo[0].price}</h1>
             </div>
           </div>
-          <div className="flex align-middle justify-center p-2 mt-1 mb-4 ">
+          <div className="flex align-middle justify-center p-2 mt-1 mb-3 ">
             <h1 className="text-white">{productInfo[0].summary}</h1>
           </div>
           <div className="flex flex-col align-middle justify-center darker-yellow rounded-2xl p-3">
@@ -94,36 +112,32 @@ const Summary = () => {
           </div>
         </div>
 
-        <div className="w-1/3 flex flex-col p-5 rounded-3xl overflow-auto cell-color">
+
+<div className="w-1/3 flex flex-col p-5 rounded-3xl overflow-auto cell-color">
           <div className="flex ">
-            <div className="flex w-1/3 p-2">
-              <img src={productIcon} className=""></img>
+            <div className="flex w-1/4 p-2">
+              <img src={shoes2} className=""></img>
             </div>
-            <div className="flex w-2/3">
-              <h1 className="text-white">
-                Kasa Smart Plug by TP-Link (HS103P2) - Smart Home WiFi...
-              </h1>
+            <div className="flex w-2/3 justify-center items-center">
+              <h1 className="text-white">{productInfo[1].name}</h1>
             </div>
           </div>
           <div className="flex align-middle justify-center p-2">
             <div className="flex w-2/5 darker-yellow justify-center rounded-2xl">
-              <h1 className="text-white">$55.55</h1>
+              <h1 className="text-white">{productInfo[1].price}</h1>
             </div>
           </div>
           <div className="flex align-middle justify-center p-2 mt-1 mb-4 ">
-            <h1 className="text-white">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore.
-            </h1>
+            <h1 className="text-white">{productInfo[1].summary}</h1>
           </div>
           <div className="flex flex-col align-middle justify-center darker-yellow rounded-2xl p-3">
             <div className="flex justify-center">
               <h1 className="text-white font-bold">Common Positive Reviews</h1>
             </div>
             <div className="flex flex-col items-start">
-              <h1 className="text-white text-sm">• Positive Review 1</h1>
-              <h1 className="text-white text-sm">• Positive Review 2</h1>
-              <h1 className="text-white text-sm">• Positive Review 3</h1>
+              <h1 className="text-white text-sm">• {productInfo[1].pros[0]}</h1>
+              <h1 className="text-white text-sm">• {productInfo[1].pros[1]}</h1>
+              <h1 className="text-white text-sm">• {productInfo[1].pros[2]}</h1>
             </div>
           </div>
 
@@ -132,43 +146,39 @@ const Summary = () => {
               <h1 className="text-white font-bold">Common Positive Reviews</h1>
             </div>
             <div className="flex flex-col items-start mt-2">
-              <h1 className="text-white text-sm">• Negative Review 1</h1>
-              <h1 className="text-white text-sm">• Negative Review 2</h1>
-              <h1 className="text-white text-sm">• Negative Review 3</h1>
+              <h1 className="text-white text-sm">• {productInfo[1].cons[0]}</h1>
+              <h1 className="text-white text-sm">• {productInfo[1].cons[1]}</h1>
+              <h1 className="text-white text-sm">• {productInfo[1].cons[2]}</h1>
             </div>
           </div>
         </div>
 
-        <div className="w-1/3 flex flex-col p-5 rounded-3xl  overflow-auto cell-color">
+
+        <div className="w-1/3 flex flex-col p-5 rounded-3xl overflow-auto cell-color">
           <div className="flex ">
-            <div className="flex w-1/3 p-2">
-              <img src={productIcon} className=""></img>
+            <div className="flex w-1/4 p-2">
+              <img src={shoes3} className=""></img>
             </div>
-            <div className="flex w-2/3">
-              <h1 className="text-white">
-                Kasa Smart Plug by TP-Link (HS103P2) - Smart Home WiFi...
-              </h1>
+            <div className="flex w-2/3 justify-center items-center">
+              <h1 className="text-white">{productInfo[2].name}</h1>
             </div>
           </div>
           <div className="flex align-middle justify-center p-2">
             <div className="flex w-2/5 darker-yellow justify-center rounded-2xl">
-              <h1 className="text-white">$55.55</h1>
+              <h1 className="text-white">{productInfo[2].price}</h1>
             </div>
           </div>
           <div className="flex align-middle justify-center p-2 mt-1 mb-4 ">
-            <h1 className="text-white">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore.
-            </h1>
+            <h1 className="text-white">{productInfo[2].summary}</h1>
           </div>
           <div className="flex flex-col align-middle justify-center darker-yellow rounded-2xl p-3">
             <div className="flex justify-center">
               <h1 className="text-white font-bold">Common Positive Reviews</h1>
             </div>
             <div className="flex flex-col items-start">
-              <h1 className="text-white text-sm">• Positive Review 1</h1>
-              <h1 className="text-white text-sm">• Positive Review 2</h1>
-              <h1 className="text-white text-sm">• Positive Review 3</h1>
+              <h1 className="text-white text-sm">• {productInfo[2].pros[0]}</h1>
+              <h1 className="text-white text-sm">• {productInfo[2].pros[1]}</h1>
+              <h1 className="text-white text-sm">• {productInfo[2].pros[2]}</h1>
             </div>
           </div>
 
@@ -177,9 +187,9 @@ const Summary = () => {
               <h1 className="text-white font-bold">Common Positive Reviews</h1>
             </div>
             <div className="flex flex-col items-start mt-2">
-              <h1 className="text-white text-sm">• Negative Review 1</h1>
-              <h1 className="text-white text-sm">• Negative Review 2</h1>
-              <h1 className="text-white text-sm">• Negative Review 3</h1>
+              <h1 className="text-white text-sm">• {productInfo[2].cons[0]}</h1>
+              <h1 className="text-white text-sm">• {productInfo[2].cons[1]}</h1>
+              <h1 className="text-white text-sm">• {productInfo[2].cons[2]}</h1>
             </div>
           </div>
         </div>

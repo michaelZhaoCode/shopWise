@@ -5,18 +5,10 @@ import ScrollToBottom from "react-scroll-to-bottom";
 
 const Chatbot = () => {
   const [userInputs, setUserInputs] = useState([
-    "input1",
-    "input2",
-    "input3asdasdasdasdasdasdasdaskldjhasljkdhbhljasdhljkasnkdjhnaisudhiu;awsdhn;iuashdb;iashd;iau",
-    "input3asdasdasdasdasdasdasdaskldjhasljkdhbhljasdhljkasnkdjhnaisudhiu;awsdhn;iuashdb;iashd;iau",
-    "input3asdasdasdasdasdasdasdaskldjhasljkdhbhljasdhljkasnkdjhnaisudhiu;awsdhn;iuashdb;iashd;iau",
+    
   ]);
   const [responses, setResponses] = useState([
-    "response1",
-    "response2",
-    "response3",
-    "response4",
-    "response5",
+   
   ]);
   const [prompt, setPrompt] = useState("");
 
@@ -74,6 +66,7 @@ const Chatbot = () => {
             resp = data.response;
         })
         setResponses((prevResponses) => [...prevResponses, resp]);
+        setPrompt('');
 
 
     } catch (error) {
@@ -95,11 +88,11 @@ const Chatbot = () => {
         </div>
 
         {/* BODY */}
-        <ScrollToBottom className="flex flex-col justify-center h-4/6 items-center overflow-auto mt-3">
+        <ScrollToBottom className="flex flex-col justify-center h-4/6 items-center overflow-auto mt-3 bg-[#202020] p-3">
           {/* Display chat messages dynamically */}
           {chatMessages.map((message, index) => (
             <div
-              className="text-white bg-[#202020] flex flex-col justify-center items-center h-auto w-full"
+              className="text-white flex flex-col justify-center items-center h-auto w-full"
               key={index}
             >
               {message}
@@ -112,6 +105,7 @@ const Chatbot = () => {
             <input
               className="footer-color text-white p-3 rounded-3xl text-sm w-10/12"
               placeholder="  Enter a message"
+              value={prompt}
               onChange={(e) => {
                 setPrompt(e.target.value);
               }}

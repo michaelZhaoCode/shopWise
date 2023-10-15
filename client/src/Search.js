@@ -28,7 +28,7 @@ const Search = () => {
         let resp = "";
         await response.json().then((data) => {
             console.log(data)
-            resp = data.response
+            resp = data
             // resp = data.response;
         })
         setProductInfo(resp);

@@ -7,7 +7,7 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 import threading
 import pickle
-from sentiment import classify 
+# from sentiment import classify 
 
 REVIEW_AMOUNT = 7
 
