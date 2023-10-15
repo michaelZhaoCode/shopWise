@@ -38,7 +38,7 @@ Cons:
 '''
 def generate_analysis(name, reviews):
     system_string = f'''
-    Given multiple customer reviews for the product {name} from Amazon, generate a summary, pros, and cons in the following format:
+    Given multiple customer reviews for the product {name} from Amazon, generate a summary, pros, and cons in the following format (NOTE: DON'T FORGET THE ---):
     Summary:
     <insert summary here>
     ---
@@ -58,7 +58,8 @@ def generate_analysis(name, reviews):
         {"role": "user", "content": f"Here are the reviews: {reviews}\n, please generate the specified summary"},
     ]
     )['choices'][0]['message']['content']
-    stripped = strip_response(SAMPLE_RES.split('\n---'))
+    print(response)
+    stripped = strip_response(response.split('\n---'))
     return stripped
 
 
@@ -90,7 +91,7 @@ def product_question(outputs: list[dict], prompt):
 
 
 def strip_response(response):
-
+    print(response, '\n\n\n\n')
     keywords = ['summary', 'pros', 'cons']
     for i in range(len(keywords)):
         assert keywords[i] in response[i].lower()
