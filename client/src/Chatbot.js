@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./Chatbot.css";
 import sendButton from "./assets/send_button.svg";
 import urlButton from "./assets/urlsubmit.png";
+import Lottie from "lottie-react"
+import robotAnimation from "./assets/robotAnimation.json"
 import ScrollToBottom from "react-scroll-to-bottom";
 
 const Chatbot = () => {
@@ -130,6 +132,7 @@ const Chatbot = () => {
         {/* Header */}
         <div className="font-bold text-2xl flex justify-center h-1/6 items-center text-white shadow-lg rounded-t-3xl header-color">
           <h1>AI CHAT</h1>
+          <Lottie className="w-32" animationData={robotAnimation}/>
         </div>
 
         {/* BODY */}
