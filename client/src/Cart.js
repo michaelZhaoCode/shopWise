@@ -23,6 +23,7 @@ const Cart = () => {
             object={cart.scene}
             scale={3}
             position={[0, -1.4, 0]}
+            rotation-y={0}
             />
         </mesh>
     )
@@ -39,6 +40,7 @@ const CartCanvas = () => {
       gl={{ preserveDrawingBuffer: true }}>
         <Suspense fallback={<CanvasLoader />}>
         <OrbitControls // allows user to rotate model, with limited rotation around specific angle/axis
+          autoRotate
           enableZoom={false}
           maxPolarAngle={Math.PI / 2}
           minPolarAngle={Math.PI / 2}
