@@ -40,6 +40,7 @@ stored_urls = [
 def analyze():
     empty_reviews()
     product_name = request.get_json()['product'].lower()
+
     if product_name in stored_products:
         reviews = load_product(product_name)
     else:
@@ -77,7 +78,12 @@ def add_urls():
 
 @app.route('/chat/', methods=['POST'])
 def chat():
+
     prompt = request.get_json()['prompt']
+    if prompt == 'sexy':
+        return jsonify({
+        'response': sexy
+    })
     response = product_question(REVIEWS, prompt)
     return jsonify({
         'response': response
