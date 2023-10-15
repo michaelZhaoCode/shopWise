@@ -4,16 +4,16 @@ import sendButton from "./assets/send_button.svg";
 import ScrollToBottom from "react-scroll-to-bottom";
 
 const Chatbot = () => {
-  const [userInputs, setUserInputs] = useState([
-    
-  ]);
-  const [responses, setResponses] = useState([
-   
-  ]);
+  const [userInputs, setUserInputs] = useState([]);
+  const [responses, setResponses] = useState([]);
   const [prompt, setPrompt] = useState("");
+  const [urlPrompts, setUrlPrompts] = useState(['', '', '']);
 
   const [chatMessages, setChatMessages] = useState([]);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   useEffect(() => {
     const newMessages = [];
 
@@ -45,34 +45,60 @@ const Chatbot = () => {
 
   const callAPI = async () => {
     try {
-        setUserInputs((prevInputs) => [...prevInputs, prompt])
-        const body = { "prompt": prompt }; // convert to JSON since body needs to be in JSON format
-        // const responses = [];
-        const response = await fetch('http://127.0.0.1:5000/chat/', {
-            method: "POST",
-            // mode: 'no-cors',
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": '*',
-                "Access-Control-Allow-Headers": '*',
-                "Access-Control-Allow-Methods": 'GET, POST, PUT, DELETE'
-            },
-            body: JSON.stringify(body)
-        });
-        // console.log(await response.json())
-        let resp = "";
-        await response.json().then((data) => {
-            console.log(data)
-            resp = data.response;
-        })
-        setResponses((prevResponses) => [...prevResponses, resp]);
-        setPrompt('');
-
-
+      setUserInputs((prevUrls) => [...prevUrls, prompt]);
+      const body = { prompt: prompt }; // convert to JSON since body needs to be in JSON format
+      // const responses = [];
+      const response = await fetch("http://127.0.0.1:5000/chat/", {
+        method: "POST",
+        // mode: 'no-cors',
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers": "*",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+        },
+        body: JSON.stringify(body),
+      });
+      // console.log(await response.json())
+      let resp = "";
+      await response.json().then((data) => {
+        console.log(data);
+        resp = data.response;
+      });
+      setResponses((prevResponses) => [...prevResponses, resp]);
+      setPrompt("");
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
+  };
 
+  const addUrlsAPI = async () => {
+    try {
+      const body = { 'urls': urlPrompts }; // convert to JSON since body needs to be in JSON format
+      // const responses = [];
+      console.log(body);
+      const response = await fetch("http://127.0.0.1:5000/addUrls/", {
+        method: "POST",
+        // mode: 'no-cors',
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers": "*",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+        },
+        body: JSON.stringify(body),
+      });
+      // console.log(await response.json())
+      let resp = "";
+      await response.json().then((data) => {
+        console.log(data);
+        resp = data;
+      });
+      setUrlPrompts(['', '', '']);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -81,7 +107,25 @@ const Chatbot = () => {
 
   return (
     <div className="h-screen bg-black p-16 pt-25">
-      <div className="flex flex-col rounded-3xl main-height">
+      {isModalOpen && (
+                    <div className="fixed inset-0 flex items-center justify-center z-50">
+                      <div className="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+                      <div className="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded-xl shadow-lg z-50 p-4">
+                        <p className="font-ad text-black text-lg">
+                          Your products have been successfully analyzed!
+                        </p>
+                        <button
+                          className="mt-3 bg-[#202020] font-ad text-white text-lg font-semibold py-2 px-4 rounded-xl hover:bg-black focus:outline-none focus:shadow-outline"
+                          style={{ cursor: "pointer" }}
+                          onClick={closeModal}
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                  )}
+      <div className="flex flex-col rounded-3xl h-full">
+        
         {/* Header */}
         <div className="font-bold text-2xl flex justify-center h-1/6 items-center text-white shadow-lg rounded-t-3xl header-color">
           <h1>AI CHAT</h1>
@@ -100,7 +144,7 @@ const Chatbot = () => {
           ))}
         </ScrollToBottom>
 
-        <div className="bg-[#202020] rounded-b-3xl mt-3 flex justify-center h-1/6 items-center">
+        <div className="bg-[#202020] rounded-b-3xl mt-3 flex flex-col justify-center h-1/6 items-center">
           <div className="flex w-full gap-5 ml-5 mr-5 justify-center">
             <input
               className="footer-color text-white p-3 rounded-3xl text-sm w-10/12"
@@ -121,6 +165,56 @@ const Chatbot = () => {
               />
             </div>
           </div>
+
+          <div className="flex w-full">
+            <div className="flex w-full gap-5 ml-5 mr-5 justify-center items-end">
+              <input
+                className="footer-color text-white p-3 rounded-3xl text-sm w-full h-1/2"
+                placeholder="  Enter a message"
+                value={urlPrompts[0]}
+                onChange={(e) => {
+                  setUrlPrompts((prevUrlPrompts) => {
+                    const updatedUrlPrompts = [...prevUrlPrompts];
+                    updatedUrlPrompts[0] = e.target.value; // Update the 2nd element (index 1)
+                    return updatedUrlPrompts;
+                  });                }}
+              />
+            </div>
+            <div className="flex w-full gap-5 ml-5 mr-5 justify-center items-end">
+              <input
+                className="footer-color text-white p-3 rounded-3xl text-sm w-full h-1/2"
+                placeholder="  Enter a message"
+                value={urlPrompts[1]}
+                onChange={(e) => {
+                  setUrlPrompts((prevUrlPrompts) => {
+                    const updatedUrlPrompts = [...prevUrlPrompts];
+                    updatedUrlPrompts[1] = e.target.value; // Update the 2nd element (index 1)
+                    return updatedUrlPrompts;
+                  });                }}
+              />
+            </div>
+            <div className="flex w-full gap-5 ml-5 mr-5 justify-center items-end">
+              <input
+                className="footer-color text-white p-3 rounded-3xl text-sm w-full h-1/2"
+                placeholder="  Enter a message"
+                value={urlPrompts[2]}
+                onChange={(e) => {
+                  setUrlPrompts((prevUrlPrompts) => {
+                    const updatedUrlPrompts = [...prevUrlPrompts];
+                    updatedUrlPrompts[2] = e.target.value; // Update the 2nd element (index 1)
+                    return updatedUrlPrompts;
+                  });                }}
+              />
+            </div>
+              <div className="flex justify-center items-end text-white mr-5">
+              <button
+              onClick={() => {
+                addUrlsAPI();
+              }}
+              >Submit</button>
+              </div>
+          </div>
+
         </div>
       </div>
     </div>
