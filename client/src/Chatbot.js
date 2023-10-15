@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Chatbot.css";
 import sendButton from "./assets/send_button.svg";
+import urlButton from "./assets/urlsubmit.png";
 import ScrollToBottom from "react-scroll-to-bottom";
 
 const Chatbot = () => {
@@ -170,7 +171,7 @@ const Chatbot = () => {
             <div className="flex w-full gap-5 ml-5 mr-5 justify-center items-end">
               <input
                 className="footer-color text-white p-3 rounded-3xl text-sm w-full h-1/2"
-                placeholder="  Enter a message"
+                placeholder="  Enter Product URL 1"
                 value={urlPrompts[0]}
                 onChange={(e) => {
                   setUrlPrompts((prevUrlPrompts) => {
@@ -183,7 +184,7 @@ const Chatbot = () => {
             <div className="flex w-full gap-5 ml-5 mr-5 justify-center items-end">
               <input
                 className="footer-color text-white p-3 rounded-3xl text-sm w-full h-1/2"
-                placeholder="  Enter a message"
+                placeholder="  Enter Product URL 2"
                 value={urlPrompts[1]}
                 onChange={(e) => {
                   setUrlPrompts((prevUrlPrompts) => {
@@ -196,7 +197,7 @@ const Chatbot = () => {
             <div className="flex w-full gap-5 ml-5 mr-5 justify-center items-end">
               <input
                 className="footer-color text-white p-3 rounded-3xl text-sm w-full h-1/2"
-                placeholder="  Enter a message"
+                placeholder="  Enter Product URL 3"
                 value={urlPrompts[2]}
                 onChange={(e) => {
                   setUrlPrompts((prevUrlPrompts) => {
@@ -207,13 +208,16 @@ const Chatbot = () => {
               />
             </div>
               <div className="flex justify-center items-end text-white mr-5">
-              <button
-              onClick={() => {
-                addUrlsAPI();
-              }}
-              >Submit</button>
+              <img
+                className="hover:scale-125 duration-500 cursor-pointer max-h-24 w-auto"
+                src={urlButton}
+                alt="Send Button"
+                onClick={() => {
+                  addUrlsAPI();
+                }}
+              />
               </div>
-          </div>
+            </div>
 
         </div>
       </div>
