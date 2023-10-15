@@ -6,7 +6,7 @@ import { useAppContext } from "./Context"
 import { useNavigate } from "react-router-dom"
 
 const Search = () => {
-  const { searchPrompt, setSearchPrompt } = useAppContext();
+  const { searchPrompt, setSearchPrompt, productInfo, setProductInfo } = useAppContext();
   const navigate = useNavigate();
   // {“product”: “frying pan”}
   const callAPI = async () => {
@@ -28,8 +28,10 @@ const Search = () => {
         let resp = "";
         await response.json().then((data) => {
             console.log(data)
+            resp = data.response
             // resp = data.response;
         })
+        setProductInfo(resp);
         // setResponses((prevResponses) => [...prevResponses, resp]);
 
 

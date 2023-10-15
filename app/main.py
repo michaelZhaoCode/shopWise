@@ -47,7 +47,7 @@ def analyze():
         sleep(2)
         analyses = load_response(product_name)
 
-        for i, analysis in analyses:
+        for i, analysis in enumerate(analyses):
             analysis["name"] = reviews[i]["name"]
             analysis["price"] = reviews[i]["price"]
             analysis["rating"] = reviews[i]["rating"]

@@ -7,13 +7,15 @@ const AppContext = createContext();
 export function AppProvider({ children }) {
   // Define your state or any data you want to share
   const [searchPrompt, setSearchPrompt] = useState('');
+  const [productInfo, setProductInfo] = useState([]);
+
 
 
 
   // You can define other state or functions here as well
 
   return (
-    <AppContext.Provider value={{ searchPrompt, setSearchPrompt}}>
+    <AppContext.Provider value={{ searchPrompt, setSearchPrompt, productInfo, setProductInfo }}>
       {children}
     </AppContext.Provider>
   );
