@@ -59,7 +59,7 @@ def generate_analysis(name, reviews):
     ]
     )['choices'][0]['message']['content']
     extracted = extract_to_list(response)
-    print(extracted)
+    print(extracted, '*****\n')
     stripped = strip_response(extracted)
     return stripped
 
@@ -90,26 +90,32 @@ def product_question(outputs: list[dict], prompt):
     return response
 
 def extract_to_list(response):
-    keywords = ['summary', 'pros', 'cons']
+    keywords = ['summary:', 'pros:', 'cons:']
     lengths = [len(i) for i in keywords]
     idxs = [response.lower().index(i) for i in keywords]
+    print(idxs)
     first = response[idxs[0]:idxs[1]]
     second = response[idxs[1]:idxs[2]]
     third = response[idxs[2]:]
-    return [first, second, third]
+    res = [first, second, third]
+
+    for i in range(len(keywords)):
+        try:
+            assert keywords[i] in res[i].lower()
+        except:
+            print(response, res, 'bad', sep='\n!!!!\n')
+    return res
 
 def strip_response(response):
    
-    keywords = ['summary', 'pros', 'cons']
-    for i in range(len(keywords)):
-        assert keywords[i] in response[i].lower()
+    
 
     response_dict = {}
     summary_res = response[0]
-    summary = summary_res[summary_res.index('\n') + 1:]
+    summary = summary_res[summary_res.index('\n') + 1:].replace('\n\n---\n', '')
 
-    pros, cons = response[1].split('\n')[2:], response[2].split('\n')[2:]
-
+    pros, cons = response[1].replace('\n\n---\n', '').split('\n')[2:], response[2].replace('\n\n---\n', '').split('\n')[2:]
+    print(pros, cons)
     for lst in [pros, cons]:
         for i in range(len(lst)):
             lst[i] = lst[i][2:]
