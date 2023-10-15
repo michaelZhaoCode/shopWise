@@ -9,7 +9,6 @@ from app.analysis import generate_analysis, product_question
 
 app = Flask(__name__)
 
-cors = CORS(app)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -37,6 +36,7 @@ stored_urls = [
 # take reviews and prompt - give response
 
 @app.route('/analyze/', methods=['POST'])
+@cross_origin
 def analyze():
     empty_reviews()
     product_name = request.get_json()['product'].lower()
@@ -58,6 +58,7 @@ def analyze():
     return dumps(analyses)
 
 @app.route('/addUrls/', methods=['POST'])
+@cross_origin
 def add_urls():
 
     empty_reviews()
@@ -77,6 +78,7 @@ def add_urls():
 
 
 @app.route('/chat/', methods=['POST'])
+@cross_origin
 def chat():
 
     prompt = request.get_json()['prompt']

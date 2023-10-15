@@ -59,6 +59,7 @@ def generate_analysis(name, reviews):
     ]
     )['choices'][0]['message']['content']
     extracted = extract_to_list(response)
+    print(extracted)
     stripped = strip_response(extracted)
     return stripped
 
