@@ -1,6 +1,6 @@
 import os
 import openai
-from scraping import load_product
+from app.scraping import load_product
 import pickle
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
