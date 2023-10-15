@@ -52,6 +52,7 @@ const Chatbot = () => {
   }, [responses, userInputs]);
 
   const callAPI = () => {
+    try {
     console.log(prompt);
     setUserInputs((prevInputs) => [...prevInputs, prompt]);
     console.log(JSON.stringify({ prompt }));
@@ -67,17 +68,17 @@ const Chatbot = () => {
       },
       body: JSON.stringify(body),
     })
-      .then((data) => {
         let resp = "";
         response.json().then((data) => {
           console.log(data);
           resp = data.response;
         });
         setResponses((prevResponses) => [...prevResponses, resp]);
-      })
-      .catch((error) => {
-        console.error("API request error:", error);
-      });
+    }
+    catch (error) {
+        console.log(error);
+    }
+
   };
 
   useEffect(() => {
