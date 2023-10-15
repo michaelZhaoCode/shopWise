@@ -8,7 +8,7 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 import threading
 import pickle
 
-REVIEW_AMOUNT = 10
+REVIEW_AMOUNT = 7
 
 
 def initialize_driver():
@@ -176,7 +176,7 @@ urls = [
 #     foundurls = product_lookup(product)
 #     outputs = reviews_from_urls(foundurls)
 #     save_product(outputs, product)
-
+#
 # for i, url in enumerate(urls):
 #     output = review_lookup(url)
 #     save_url(url, str(i))
