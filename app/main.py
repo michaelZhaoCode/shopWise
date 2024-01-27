@@ -101,10 +101,10 @@ def chat():
     print(1)
 
     prompt = request.get_json()['prompt']
-    if prompt == 'sexy':
+    if prompt == 'hello':
         print(1)
         return jsonify({
-        'response': 'sexy'
+        'response': 'test'
     })
     response = product_question(REVIEWS, prompt)
     return jsonify({
